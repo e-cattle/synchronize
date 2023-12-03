@@ -1,0 +1,24 @@
+name: bigboxx-synchronize
+base: core18
+version: git
+summary: Synchronize for BigBoxx
+description: |
+      Synchronize for BigBoxx
+
+grade: devel
+confinement: devmode
+
+apps:
+  synchronize:
+    command: synchronize
+    daemon: simple
+    plugs: [home,network,network-bind,mount-observe,network-observe,system-observe]
+    timer: 00:00-24:00/96
+
+parts:
+  synchronize:
+    plugin: python
+    python-version: python3
+    source: .
+    requirements: ['requirements.txt']
+    
