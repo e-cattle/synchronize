@@ -6,10 +6,8 @@
     "max_record_sync": 100,
     "first_sync": true,
     "port": 52000,
-    "url_farm": "http://ip172-18-0-16-cllsn8efml8g00alop70-3000.direct.labs.play-with-docker.com",
+    "url_farm": "URL_FARM",
     "url_db": "mongodb://localhost:27017/",
     "db_name": "e-cattle",
-    "snap_data": ".",
-    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoiR0FURVdBWSIsImZhcm0iOiIxIiwibWFjIjoiMDI6NDI6YWM6MWI6MDA6MDUifQ.puXPtTNagG1ihvH8pntzD9UBV1m749QDy5H7kANGEy4",
-    "id_farm": "1"
+    "snap_data": "."
 }

@@ -3,7 +3,6 @@ from bson.json_util import dumps
 from aiohttp.client import ClientSession
 from requests import Response
 
-
 from src.app.config.envs import TOKEN, URL_FARM, ID_FARM, PORT_FARM
 
 
