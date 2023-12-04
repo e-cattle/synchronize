@@ -1,4 +1,4 @@
-name: bigboxx-synchronize
+name: bigboxx-sync
 base: core18
 version: git
 summary: Synchronize for BigBoxx
