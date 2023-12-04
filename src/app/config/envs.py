@@ -7,7 +7,7 @@ conf.read_config()
 
 
 if getenv("SNAP_DATA"):
-    folder = getenv("SNAP_DATA").split("/bigboxx-synchronize")[0]
+    folder = getenv("SNAP_DATA").split("/bigboxx-sync")[0]
     folder = f"{folder}/bigboxx-kernel/current/storage"
 
 values = {}
