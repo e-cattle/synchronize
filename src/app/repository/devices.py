@@ -107,11 +107,11 @@ class DevicesRepository:
         list_sensors = []
         new_sensors = []
         conditions = [
-
+            {"synchronized": {"$exists": False}},
+            {"synchronized": self.synchronized},
+        ]
         register_number_for_sensor = int(max_register / len(sensors_values))
-        print(register_number_for_sensor, len(registers))
-        # TODO fim dos registros - add marcacao.
-        # verificar between
+
         for type_sensor in sensors_values:
             list_sensors.append(type_sensor["type"])
             data_sensor = list(
