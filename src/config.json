@@ -6,7 +6,7 @@
     "max_record_sync": 100,
     "first_sync": true,
     "port": 52000,
-    "url_farm": "URL_FARM",
+    "url_farm": "localhost:8000",
     "url_db": "mongodb://localhost:27017/",
     "db_name": "e-cattle",
     "snap_data": "."

@@ -1,7 +1,7 @@
-import aiohttp, asyncio, requests
 from bson.json_util import dumps
 from aiohttp.client import ClientSession
-from requests import Response
+from requests import Response, post, get
+from asyncio import gather, ensure_future
 
 from src.app.config.envs import TOKEN, URL_FARM, ID_FARM, PORT_FARM
 
@@ -16,7 +16,7 @@ class Farm:
     def check_farm_status(self):
         try:
             print(f"{self.url}", self.__headers)
-            response = requests.get(f"{self.url}", headers=self.__headers)
+            response = get(f"{self.url}", headers=self.__headers)
         except Exception as err:
             response = Response()
             response.status_code = 500
@@ -25,7 +25,7 @@ class Farm:
 
     def save_contracts(self, data):
         try:
-            response = requests.post(
+            response = post(
                 f"{self.url}/cloud/contracts", json=data, headers=self.__headers
             )
         except Exception as err:
@@ -37,7 +37,7 @@ class Farm:
 
     def save_devices(self, data):
         try:
-            response = requests.post(
+            response = post(
                 f"{self.url}/cloud/devices", json=data, headers=self.__headers
             )
         except Exception as err:
@@ -49,7 +49,7 @@ class Farm:
 
     def request_to_farms_sync(self, data):
         try:
-            response = requests.post(
+            response = post(
                 f"{self.url}/cloud/sensors", json=data, headers=self.__headers
             )
         except Exception as err:
@@ -71,13 +71,13 @@ class Farm:
             return device
 
     async def request_list_to_farm(self, sensors: list):
-        async with aiohttp.ClientSession() as session:
+        async with ClientSession() as session:
             tasks = []
             for sensor in sensors:
                 tasks.append(
-                    asyncio.ensure_future(self.request_to_farm_async(session, sensor))
+                    ensure_future(self.request_to_farm_async(session, sensor))
                 )
-            await asyncio.gather(*tasks)
+            await gather(*tasks)
         return True
 
     def group_request(self, status, type_sensor, id):
