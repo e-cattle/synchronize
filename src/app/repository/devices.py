@@ -107,9 +107,7 @@ class DevicesRepository:
         list_sensors = []
         new_sensors = []
         conditions = [
-            {"synchronized": {"$exists": False}},
-            {"synchronized": self.synchronized},
-        ]
+
         register_number_for_sensor = int(max_register / len(sensors_values))
         print(register_number_for_sensor, len(registers))
         # TODO fim dos registros - add marcacao.
@@ -189,12 +187,3 @@ class DevicesRepository:
                 ],
             },
         }
-
-
-# - Sincronizar todos os dados de uma unica vez
-# - Sincronizar os dados 1 por 1 e ja ir atualizando no banco
-# - listar todos os dados da colection em um unico registro
-# - listar os dados de forma recursiva
-# - realizar todos os processos assincronos, listar e ja enviar para o servidor
-#
-# - realizar busca nos contratos no lugar no device

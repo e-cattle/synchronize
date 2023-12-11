@@ -22,11 +22,16 @@ def list_files(path):
 paths, files = list_files("src")
 
 setup(
-    name="bigboxx-synchronize",
+    name="bigboxx-sync",
     version="0.0.1",
     packages=paths,
     data_files=[("src", ["src/config.json"])],
     package_data={"src": ["config.json", "src/config.json"]},
     include_package_data=True,
-    entry_points={"console_scripts": ["synchronize=src.main:main"]},
+    entry_points={
+        "console_scripts": [
+            "synchronize=src.main:sync",
+            "gc=src.main:gc",
+        ]
+    },
 )
