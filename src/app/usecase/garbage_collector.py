@@ -1,8 +1,8 @@
 from loguru import logger
 from pymongo.database import Database
 
-from app.service.memory_status import MemoryStatus
-from app.service.devices import Devices
+from src.app.service.memory_status import MemoryStatus
+from src.app.service.devices import Devices
 
 
 class GarbageCollectorUseCase:

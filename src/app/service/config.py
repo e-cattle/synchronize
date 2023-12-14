@@ -17,5 +17,5 @@ class Config:
         return config
 
     def write_config(self, data):
-        with open(f"{self._file_name }", "w") as f:
+        with open(f"{self._file_name}", "w") as f:
             json.dump(data, f)

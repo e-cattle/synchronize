@@ -5,7 +5,6 @@ from src.app.service.config import Config
 conf = Config()
 conf.read_config()
 
-
 if getenv("SNAP_DATA"):
     folder = getenv("SNAP_DATA").split("/bigboxx-sync")[0]
     folder = f"{folder}/bigboxx-kernel/current/storage"
