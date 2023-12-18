@@ -23,7 +23,7 @@ class GarbageCollectorUseCase:
                     for key in records_to_delete.keys():
                         self._devices.delete_sensors(key, records_to_delete[key])
 
-        if self._memory_status.is_clear_memory(available_memory=available_memory):
+        elif self._memory_status.is_clear_memory(available_memory=available_memory):
             data_sensors = self._devices.get_old_records()
             if len(data_sensors) > 0:
                 records_to_delete = self.__get_map_list_ids(

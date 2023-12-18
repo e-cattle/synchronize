@@ -1,4 +1,6 @@
 import os
+from loguru import logger
+
 
 class MemoryStatus:
     __free = 0
@@ -15,5 +17,7 @@ class MemoryStatus:
         self.__used = (st.f_blocks - st.f_bfree) * st.f_frsize
 
     def is_clear_memory(self, available_memory: int = 20):
-        print(self.__free / self.__total * 100, self.__free, self.__total)
+        if self.__free == 0:
+            return True
+        logger.info(self.__free / self.__total * 100, self.__free, self.__used, self.__total)
         return (self.__free / self.__total * 100) < available_memory
