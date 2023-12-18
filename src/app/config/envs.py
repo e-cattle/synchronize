@@ -1,8 +1,15 @@
-from os import getenv, listdir
+from os import getenv, listdir, path
 
 from src.app.service.config import Config
 
 conf = Config()
+
+file_name = path.join(getenv("SNAP_COMMON"),"config.json")
+
+if path.exists(file_name):
+    print("Using config.json from snap_common")
+    conf._file_name = file_name
+    
 conf.read_config()
 
 if getenv("SNAP_DATA"):
@@ -16,8 +23,8 @@ for file in listdir(folder):
     if f.get("value"):
         values[f.get("key")] = f.get("value")
 
-conf.config["token"] = values["TOKEN"]
-conf.config["id_farm"] = values["FARM"]
+conf.config["token"] = values.get("TOKEN")
+conf.config["id_farm"] = values.get("FARM")
 # conf.write_config(conf.config)
 
 URL_DB = conf.config.get("url_db")
