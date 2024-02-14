@@ -19,5 +19,5 @@ class MemoryStatus:
     def is_clear_memory(self, available_memory: int = 20):
         if self.__free == 0:
             return True
-        logger.info(self.__free / self.__total * 100, self.__free, self.__used, self.__total)
+        logger.info(f"{self.__free / self.__total * 100}, {self.__free}, {self.__used}, {self.__total}")
         return (self.__free / self.__total * 100) < available_memory

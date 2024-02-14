@@ -7,7 +7,6 @@ conf = Config()
 file_name = path.join(getenv("SNAP_COMMON"),"config.json")
 
 if path.exists(file_name):
-    print("Using config.json from snap_common")
     conf._file_name = file_name
     
 conf.read_config()
@@ -18,27 +17,31 @@ if getenv("SNAP_DATA"):
 
 values = {}
 
-for file in listdir(folder):
-    f = Config().read_files(f"{folder}/{file}")
-    if f.get("value"):
-        values[f.get("key")] = f.get("value")
+if path.exists(folder):
+    for file in listdir(folder):
+        f = Config().read_files(f"{folder}/{file}")
+        if f.get("value"):
+            values[f.get("key")] = f.get("value")
 
 conf.config["token"] = values.get("TOKEN")
 conf.config["id_farm"] = values.get("FARM")
-# conf.write_config(conf.config)
 
 URL_DB = conf.config.get("url_db")
 DATABASE = conf.config.get("db_name")
 
+TOKEN = None
+URL_FARM = None
+ID_FARM = None
+PORT_FARM = None
+
+FIRST_SYNC = conf.config.get("first_sync")
+IS_SYNC = conf.config.get("is_to_sync", False)
 
 if conf.config.get("id_farm"):
     TOKEN = conf.config.get("token")
     URL_FARM = conf.config.get("url_farm")
     ID_FARM = int(conf.config.get("id_farm"))
     PORT_FARM = int(conf.config.get("port", 52000)) + ID_FARM
-
-    FIRST_SYNC = conf.config.get("first_sync")
-    IS_SYNC = conf.config.get("is_to_sync", False)
 
     if not (URL_DB and DATABASE and TOKEN and URL_FARM and ID_FARM):
         print(

@@ -20,7 +20,7 @@ class Synchonization:
 
         if resp.status_code != 200:
             logger.info(f"Farm is not active: {resp.status_code}")
-            return "Inative Farm"
+            return f"Farm is not active: {resp.status_code}"
 
         contracts = self.devices.get_unsynchronized_contracts()
 
@@ -32,7 +32,7 @@ class Synchonization:
                 "mac": "02:42:ac:1b:00:05",
             }
             resp = self.farm.save_contracts(data)
-            print(resp.text)
+            logger.info(resp.text)
             if resp.status_code > 201:
                 return "Error in farm"
             self.devices.update_contracts_to_sync()
