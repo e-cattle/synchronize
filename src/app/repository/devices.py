@@ -55,7 +55,7 @@ class DevicesRepository:
         conditions = [{"synchronized": {"$exists": False}}, {"synchronized": False}]
         pipelines = [
             {"$match": {"$or": conditions}},
-            {"$sort": {"date": -1}},
+            {"$sort": {"date": 1}},
             {"$limit": 1},
         ]
 
@@ -86,7 +86,7 @@ class DevicesRepository:
             data_sensor = list(
                 self.__db.get_collection(type_sensor["type"])
                 .find({"$or": conditions})
-                .sort("date", -1)
+                .sort("date", 1)
                 .skip(start_page)
                 .limit(final_page)
             )

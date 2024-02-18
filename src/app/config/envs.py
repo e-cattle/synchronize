@@ -4,24 +4,24 @@ from src.app.service.config import Config
 
 conf = Config()
 
-file_name = path.join(getenv("SNAP_COMMON"),"config.json")
+if getenv("SNAP_COMMON"):
+    file_name = path.join(getenv("SNAP_COMMON"),"config.json")
 
-if path.exists(file_name):
-    conf._file_name = file_name
-    
+    if path.exists(file_name):
+        conf._file_name = file_name
+        
 conf.read_config()
+values = {}
 
 if getenv("SNAP_DATA"):
     folder = getenv("SNAP_DATA").split("/bigboxx-sync")[0]
     folder = f"{folder}/bigboxx-kernel/current/storage"
 
-values = {}
-
-if path.exists(folder):
-    for file in listdir(folder):
-        f = Config().read_files(f"{folder}/{file}")
-        if f.get("value"):
-            values[f.get("key")] = f.get("value")
+    if path.exists(folder):
+        for file in listdir(folder):
+            f = Config().read_files(f"{folder}/{file}")
+            if f.get("value"):
+                values[f.get("key")] = f.get("value")
 
 conf.config["token"] = values.get("TOKEN")
 conf.config["id_farm"] = values.get("FARM")

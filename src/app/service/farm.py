@@ -15,7 +15,6 @@ class Farm:
 
     def check_farm_status(self):
         try:
-            print(f"{self.url}", self.__headers)
             response = get(f"{self.url}", headers=self.__headers)
         except Exception as err:
             response = Response()

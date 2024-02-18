@@ -58,8 +58,8 @@ class Synchonization:
             return "No records to synchronize"
 
         logger.info(f"total old records: {len(sensors)}")
-
-        asyncio.run(self.farm.request_list_to_farm(sensors[: self.max_register]))
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(self.farm.request_list_to_farm(sensors[: self.max_register]))
 
         self.__change_sensors_by_status()
 
