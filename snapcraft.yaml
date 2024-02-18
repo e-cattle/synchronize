@@ -1,10 +1,11 @@
 name: bigboxx-sync
 base: core18
 version: git
-summary: |
-    Sync daemon of IoT middleware from e-Cattle platform for livestock farms
+summary: Sync daemon of IoT middleware from e-Cattle platform for livestock farms
 description: | 
-    e-Cattle BigBoxx is a middleware to receive, rank, segment, persist and provide sensory data for IoT applications in livetstock farms. This module, named Synchronize, has the role to send local data to cloud.
+  e-Cattle BigBoxx is a middleware to receive, rank, segment, persist and provide sensory data
+  for IoT applications in livetstock farms. This module, named Synchronize, has the role to send 
+  local data to cloud.
 
 grade: devel
 confinement: devmode
