@@ -31,7 +31,6 @@ class Farm:
             response = Response()
             response.status_code = 500
             response.error = str(err)
-            raise err
         return response
 
     def save_devices(self, data):
@@ -43,7 +42,6 @@ class Farm:
             response = Response()
             response.status_code = 500
             response.error = str(err)
-            raise err
         return response
 
     def request_to_farms_sync(self, data):
@@ -55,7 +53,6 @@ class Farm:
             response = Response()
             response.status_code = 500
             response.error = str(err)
-            raise err
         return response
 
     async def request_to_farm_async(self, session: ClientSession, device: dict):
