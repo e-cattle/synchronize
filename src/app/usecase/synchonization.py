@@ -3,24 +3,25 @@ from bson.json_util import dumps
 from loguru import logger
 import asyncio
 
-from src.app.config.envs import URL_FARM
+from src.app.config.envs import URL_FARM, ID_FARM, SYNC_ACTIVE, DEL_REC_AFTER_SYNC
 from src.app.service.devices import Devices
 from src.app.service.farm import Farm
 
 
 class Synchonization:
     def __init__(self, db: Database, max_register=1000):
-        self.devices = Devices(db, max_register)
-        self.farm = Farm(URL_FARM)
-        self.max_register = max_register
+        if ID_FARM:
+            self.devices = Devices(db, max_register)
+            self.farm = Farm(URL_FARM)
+            self.max_register = max_register
 
     def synchronize_records(self):
-        logger.info("Start synchronize records")
-        resp = self.farm.check_farm_status()
+        if not self.__are_variables_valid():
+            return "Variables are not valid"
 
-        if resp.status_code != 200:
-            logger.info(f"Farm is not active: {resp.status_code}")
-            return f"Farm is not active: {resp.status_code}"
+        logger.info("Start synchronize records")
+        if not self.__check_farm_status():
+            return "Farm is not active"
 
         contracts = self.devices.get_unsynchronized_contracts()
 
@@ -65,25 +66,41 @@ class Synchonization:
 
         return len(sensors)
 
+    def __are_variables_valid(self):
+        if not SYNC_ACTIVE:
+            logger.info("Synchronization is not active")
+            return False
+        if not URL_FARM:
+            logger.info("Farm URL is not defined")
+            return False
+        if not ID_FARM:
+            logger.info("Farm ID is not defined")
+            return False
+        return True
+
+    def __check_farm_status(self):
+        resp = self.farm.check_farm_status()
+        if resp.status_code != 200:
+            logger.info(f"Farm is not active: {resp.status_code}")
+            return False
+        return True
+    
     def __change_sensors_by_status(self):
-        for sensor in self.farm.request_status.keys():
-            logger.info(
-                f"sensor: {sensor} and status: {self.farm.request_status[sensor].keys()}"
-            )
-            for status in self.farm.request_status[sensor].keys():
-                ids = self.farm.request_status[sensor][status]
+        for sensor, values in self.farm.request_status.items():
+            logger.info(f"sensor: {sensor} and status: {values.keys()}")
+            for status, ids in values.items():
                 if status == 500:
                     logger.info(
                         f"sensor: {sensor} and status: {status} and total ids: {len(ids)}"
                     )
-                    continue
-                if status in [200, 201]:
-                    logger.info(
-                        f"update sensor: {sensor} and status: {status} and total ids: {len(ids)}"
-                    )
-                    self.devices.update_sensors(sensor, ids)
-                if status in [300]:
+                elif DEL_REC_AFTER_SYNC or status == 300:
                     logger.info(
                         f"delete sensor: {sensor} and status: {status} and total ids: {len(ids)}"
                     )
                     self.devices.delete_sensors(sensor, ids)
+
+                elif status in [200, 201]:
+                    logger.info(
+                        f"update sensor: {sensor} and status: {status} and total ids: {len(ids)}"
+                    )
+                    self.devices.update_sensors(sensor, ids)

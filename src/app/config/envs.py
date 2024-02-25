@@ -35,7 +35,8 @@ ID_FARM = None
 PORT_FARM = None
 
 FIRST_SYNC = conf.config.get("first_sync")
-IS_SYNC = conf.config.get("is_to_sync", False)
+SYNC_ACTIVE = conf.config.get("is_sync_active", False)
+DEL_REC_AFTER_SYNC = conf.config.get("del_record_after_sync", False)
 
 if conf.config.get("id_farm"):
     TOKEN = conf.config.get("token")
@@ -43,16 +44,15 @@ if conf.config.get("id_farm"):
     ID_FARM = int(conf.config.get("id_farm"))
     PORT_FARM = int(conf.config.get("port", 52000)) + ID_FARM
 
-    if not (URL_DB and DATABASE and TOKEN and URL_FARM and ID_FARM):
-        print(
-            f"""\
-            URL_DB: {URL_DB is not None},
-            DATABASE: {DATABASE is not None},
-            TOKEN: {TOKEN is not None},
-            URL_FARM: {URL_FARM is not None},
-            ID_FARM: {ID_FARM is not None}\
-            """
-        )
-
 
 MAX_RECORD_SYNC = conf.config.get("max_record_sync", 1000)
+PRIORITIZE_COLLECTIONS = list(conf.config.get("prioritize_sync_collections", []))
+
+
+GC_AVAIL_MEM_SYNC = conf.config.get("available_memory_sync", 20)
+GC_AVAIL_MEM_NOT_SYNC = conf.config.get("available_memory_not_sync", 10)
+GC_TOTAL_REC_DEL = conf.config.get("total_records_to_delete", 1000)
+
+GC_PRIORITIZE_DEL_COLLECTIONS = list(
+    conf.config.get("prioritize_delete_collections", [])
+)

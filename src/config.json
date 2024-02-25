@@ -1,13 +1,15 @@
 {
-    "available_memory_sync": 20,
-    "available_memory_not_sync": 10,
-    "is_to_sync": true,
-    "del_record_after_sync": true,
+    "first_sync ": true,
+    "is_sync_active": true,
+    "del_record_after_sync": false,
     "max_record_sync": 100,
-    "first_sync": true,
+    "prioritize_sync_collections": [],
     "port": 52000,
-    "url_farm": "localhost:8000",
+    "url_farm": "http://e-cattle.cnpgc.embrapa.br/$PORT",
     "url_db": "mongodb://localhost:27017/",
     "db_name": "e-cattle",
-    "snap_data": "."
+    "available_memory_sync": 20,
+    "available_memory_not_sync": 10,
+    "total_records_to_delete": 1000,
+    "prioritize_delete_collections": []
 }

@@ -23,6 +23,8 @@ class Devices:
 
     def get_old_records(self):
         self.sensors = []
+        self.registers = []
+        start_page = 0
 
         self.devices = self.device_reporsitory.get_devices()
         if len(self.devices) == 0:
@@ -37,9 +39,7 @@ class Devices:
         total_sensors_with_values = len(sensors_with_values)
         self.max_register = max(total_sensors_with_values, self.max_register)
         register_number_for_sensor = int(self.max_register / total_sensors_with_values)
-        self.registers = []
-        start_page = 0
-
+        
         while True:
             (
                 new_registers,
