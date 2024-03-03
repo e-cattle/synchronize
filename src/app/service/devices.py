@@ -21,10 +21,9 @@ class Devices:
         self.devices = self.device_reporsitory.get_devices_to_sync(False)
         return self.devices
 
-    def get_old_records(self):
+    def get_old_records(self, synchronized: bool = False, priority: list = []):
         self.sensors = []
-        self.registers = []
-        start_page = 0
+        self.registers = []        
 
         self.devices = self.device_reporsitory.get_devices()
         if len(self.devices) == 0:
@@ -39,33 +38,47 @@ class Devices:
         total_sensors_with_values = len(sensors_with_values)
         if total_sensors_with_values == 0:
             return []
-        self.max_register = max(total_sensors_with_values, self.max_register)
-        register_number_for_sensor = int(self.max_register / total_sensors_with_values)
-        
-        while True:
-            (
-                new_registers,
-                sensors_with_values,
-            ) = self.device_reporsitory.get_values_from_sensors(
-                sensors_with_values, start_page, register_number_for_sensor
+
+        priority_sensors = [sensor for sensor in sensors_with_values if sensor["type"] in priority]
+        if len(priority_sensors) > 0:
+            print(f"priority sensors: {len(priority_sensors)}")
+            self.registers.extend(
+                self.__get_sensors(priority_sensors, self.max_register*0.7, synchronized)
             )
 
-            self.registers.extend(new_registers)
+        other_sensors = [sensor for sensor in sensors_with_values if sensor["type"] not in priority]
+        if len(other_sensors) > 0:
+            print(f"other sensors: {len(other_sensors)}")
+            max_register = self.max_register - len(self.registers)
+            self.registers.extend(
+                self.__get_sensors(other_sensors, max_register, synchronized)
+            )
+        
+        return self.registers
+    
+    def __get_sensors(self, sensors: list, max_register: int, synchronized: bool = False):
+        start_page = 0
+        total_sensors = len(sensors)
+        max_register = max(total_sensors, max_register)
+        target_register_count = int(max_register / total_sensors)
+        registers = []
+        
+        while True:
+            new_registers, sensors = self.device_reporsitory.get_values_from_sensors(
+                sensors, start_page, target_register_count, synchronized
+            )
 
-            total_register = len(self.registers)
+            registers.extend(new_registers)
+            total_register = len(registers)
 
-            if len(sensors_with_values) == 0 or total_register >= self.max_register:
+            if len(sensors) == 0 or total_register >= max_register:
                 break
 
-            start_page += register_number_for_sensor
-            if total_register < self.max_register * 0.9:
-                register_number_for_sensor = max(
-                    1,
-                    int(
-                        (self.max_register - total_register) / len(sensors_with_values)
-                    ),
-                )
-        return self.registers
+            start_page += target_register_count
+            if total_register < max_register * 0.9:
+                register_count = int((max_register - total_register) / len(sensors))
+                target_register_count = max(1, register_count)
+        return registers
 
     def update_contracts_to_sync(self):
         ids = []

@@ -3,7 +3,13 @@ from bson.json_util import dumps
 from loguru import logger
 import asyncio
 
-from src.app.config.envs import URL_FARM, ID_FARM, SYNC_ACTIVE, DEL_REC_AFTER_SYNC
+from src.app.config.envs import (
+    URL_FARM,
+    ID_FARM,
+    SYNC_ACTIVE,
+    DEL_REC_AFTER_SYNC,
+    PRIORITIZE_COLLECTIONS,
+)
 from src.app.service.devices import Devices
 from src.app.service.farm import Farm
 
@@ -53,14 +59,15 @@ class Synchonization:
             self.devices.update_devices_to_sync()
             return "Update devices"
 
-        sensors = self.devices.get_old_records()
-
+        sensors = self.devices.get_old_records(priority=PRIORITIZE_COLLECTIONS)
         if len(sensors) == 0:
             return "No records to synchronize"
 
         logger.info(f"total old records: {len(sensors)}")
         loop = asyncio.get_event_loop()
-        loop.run_until_complete(self.farm.request_list_to_farm(sensors[: self.max_register]))
+        loop.run_until_complete(
+            self.farm.request_list_to_farm(sensors[: self.max_register])
+        )
 
         self.__change_sensors_by_status()
 
@@ -84,10 +91,9 @@ class Synchonization:
             logger.info(f"Farm is not active: {resp.status_code}")
             return False
         return True
-    
+
     def __change_sensors_by_status(self):
         for sensor, values in self.farm.request_status.items():
-            logger.info(f"sensor: {sensor} and status: {values.keys()}")
             for status, ids in values.items():
                 if status == 500:
                     logger.info(
