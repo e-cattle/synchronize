@@ -37,6 +37,8 @@ class Devices:
             self.sensors
         )
         total_sensors_with_values = len(sensors_with_values)
+        if total_sensors_with_values == 0:
+            return []
         self.max_register = max(total_sensors_with_values, self.max_register)
         register_number_for_sensor = int(self.max_register / total_sensors_with_values)
         
