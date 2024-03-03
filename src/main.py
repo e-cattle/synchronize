@@ -12,7 +12,6 @@ def sync():
     logger.info(f"Finish synchronize records with result: {result}")
 
 def gc():
-    logger.info("Start garbage collector")
     GarbageCollectorUseCase(my_database, GC_TOTAL_REC_DEL).execute()
     logger.info("Finish garbage collector")
 
