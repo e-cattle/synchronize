@@ -22,3 +22,7 @@ class MemoryStatus:
             return True
         logger.info(f"Memory available: {round(self.__percent,2)}%")
         return self.__percent < available_memory
+    
+    @property
+    def percent(self):
+        return self.__percent

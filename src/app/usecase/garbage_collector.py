@@ -16,13 +16,16 @@ class GarbageCollectorUseCase:
         
     def execute(self, available_memory: int = 20, synchronized: bool = True):
         logger.info("Starting garbage collection")
-        if self._memory_status.is_clear_memory(available_memory=available_memory):
-            if not synchronized:
-                synchronized = self.__synchronize_records()
-            deleted = self.__clear_memory(synchronized)
-            if not deleted:
-                return self.execute(10, False)
-    
+        try:
+            if self._memory_status.is_clear_memory(available_memory=available_memory):
+                if not synchronized:
+                    synchronized = self.__synchronize_records()
+                deleted = self.__clear_memory(synchronized)
+                if not deleted or self._memory_status.percent <= 10:
+                    return self.execute(10, False)
+        except Exception:
+            ...
+
     def __clear_memory(self, synchronized: bool = True):
         data_sensors = self._devices.get_old_records(synchronized, priority=GC_PRIORITIZE_DEL_COLLECTIONS)
         if len(data_sensors) > 0:
@@ -36,7 +39,7 @@ class GarbageCollectorUseCase:
                 return True
         elif not synchronized:
             logger.info("No records to delete")
-            return True
+            raise Exception("No records to delete")
         return False
 
     def __get_map_list_ids(self, sensors: list, registers: list):
